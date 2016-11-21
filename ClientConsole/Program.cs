@@ -10,7 +10,11 @@ namespace ClientConsole
     {
         static void Main(string[] args)
         {
-            String server = "192.168.1.5";
+            // test md5 file
+            Checksum.computeHashFile(@"C:\current\prova.txt");
+            Console.ReadLine();
+            Environment.Exit(-1);
+            //String server = "192.168.1.5";
             int serverPort = 9000;
             String msg = "Funziona!";
 
