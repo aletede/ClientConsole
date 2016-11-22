@@ -14,8 +14,13 @@ namespace ClientConsole
                 using (var stream = File.OpenRead(pathFile))
                 {
                     byte[] data = md5.ComputeHash(stream);
+                    byte[] data2 = md5.ComputeHash(Encoding.ASCII.GetBytes(Path.GetFileName(pathFile)));
                     
                     StringBuilder sBuilder = new StringBuilder();
+                    for (int i = 0; i < data2.Length; i++)
+                    {
+                        sBuilder.Append(data2[i].ToString("x2"));
+                    }
                     for (int i = 0; i < data.Length; i++)
                     {
                         sBuilder.Append(data[i].ToString("x2"));

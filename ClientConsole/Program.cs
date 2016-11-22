@@ -12,6 +12,7 @@ namespace ClientConsole
         {
             // test md5 file
             Checksum.computeHashFile(@"C:\current\prova.txt");
+            Checksum.computeHashFile(@"C:\current\prova2.txt");
             Console.ReadLine();
             Environment.Exit(-1);
             //String server = "192.168.1.5";
