@@ -9,27 +9,29 @@ namespace ClientConsole
     {
         static public void computeHashFile(string pathFile)
         {
-            using (var md5 = MD5.Create())
+            using (MD5 md5 = MD5.Create())
             {
-                using (var stream = File.OpenRead(pathFile))
+                using (FileStream stream = File.OpenRead(pathFile))
                 {
-                    byte[] data = md5.ComputeHash(stream);
-                    byte[] data2 = md5.ComputeHash(Encoding.ASCII.GetBytes(Path.GetFileName(pathFile)));
-                    
-                    StringBuilder sBuilder = new StringBuilder();
-                    for (int i = 0; i < data2.Length; i++)
-                    {
-                        sBuilder.Append(data2[i].ToString("x2"));
-                    }
-                    for (int i = 0; i < data.Length; i++)
-                    {
-                        sBuilder.Append(data[i].ToString("x2"));
-                    }
-                    
-                    Console.WriteLine(sBuilder.ToString());
-                    //Console.WriteLine(Encoding.ASCII.GetString(md5.ComputeHash(stream)));
+                    byte[] checksumName = md5.ComputeHash(Encoding.ASCII.GetBytes(Path.GetFileName(pathFile)));
+                    byte[] checksumData = md5.ComputeHash(stream);
+                    Console.WriteLine(Convert.ToBase64String(mergeTwoHashes(md5, checksumName, checksumData)));
                 }
             }
+        }
+
+        static private byte[] mergeTwoHashes(MD5 md5, byte[] hash1, byte[] hash2)
+        {
+            md5.TransformBlock(hash1, 0, hash1.Length, hash1, 0);
+            md5.TransformFinalBlock(hash2, 0, hash2.Length);
+            return md5.Hash;
+            /*
+            byte[] checksum = new byte[checksumName.Length + checksumData.Length];
+            Buffer.BlockCopy(checksumName, 0, checksum, 0, checksumName.Length);
+            Buffer.BlockCopy(checksumData, 0, checksum, checksumName.Length, checksumData.Length);
+            byte[] checksumFile = md5.ComputeHash(checksum);
+            Console.WriteLine("versione_2: {0}", Convert.ToBase64String(checksumFile));
+            */
         }
     }
 }
